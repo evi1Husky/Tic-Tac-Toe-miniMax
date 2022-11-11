@@ -160,23 +160,57 @@ header {
 
 .easy {
   color: #73c768;
+  transition: color 1.3s;
+}
+
+.easy:hover {
+  color: #90e984;
+  transition: color 0s;
+}
+
+.easy:active {
+  color: #baeeb3;
+  transition: color 0s;
 }
 
 .medium {
   color: #5bafe6;
+  transition: color 1.3s;
+}
+
+.medium:hover {
+  color: #6dc4ff;
+  transition: color 0s;
+}
+
+.medium:active {
+  color: #8bc9f1;
+  transition: color 0s;
 }
 
 .unbeatable {
   color: #ff8383;
+  transition: color 1.3s;
+}
+
+.unbeatable:hover {
+  color: #ff9e9e;
+  transition: color 0s;
+}
+
+.unbeatable:active {
+  color: #ffb0b0;
+  transition: color 0s;
 }
 
 .difficulty-button:hover {
-  color: #5bafe6;
+  color: #6dc4ff;
   transition: color 0s;
 }
 
 .difficulty-button:active {
-  color: #85c1e9;
+  color: #8bc9f1;
+  transition: color 0s;
 }
 
 @media (max-width:420px) {

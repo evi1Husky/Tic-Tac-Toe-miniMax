@@ -16,7 +16,6 @@ const renderer = (() => {
       };
     };
     updateGameStats();
-    console.log(gameBoard.xoArray);
   };
   const getStats = () => document.querySelector(".stats");
   const gameStats = getStats();
@@ -46,13 +45,15 @@ const renderer = (() => {
 })();
 
 const player = (() => {
+  const name = "player";
   let score = 0;
   let symbol = "x";
   const color = "#5bafe6";
-  return {symbol, color, score};
+  return {name, symbol, color, score};
 })();
 
 const computer = (() => {
+  const name = "computer";
   let score = 0;
   let symbol = "o";
   const color = "#ff8383";
@@ -76,7 +77,7 @@ const computer = (() => {
       console.log("unbeatable move");
     };
   };
-  return {symbol, color, score, difficulty, computerMove};
+  return {name, symbol, color, score, difficulty, computerMove};
 })();
 
 const game = (() => {
@@ -86,15 +87,64 @@ const game = (() => {
         if (gameBoard.xoArray[i] === "") {
           gameBoard.xoArray[i] = player.symbol;
           renderer.updateBoard();
+          let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
+          endGame(isWinner, player.name);
+          setTimeout(() => {
+            renderer.updateBoard();
+          }, "1200");
+          if (isWinner === true || isWinner === "tie") {
+            return;
+          };
           setTimeout(() => {
             computer.computerMove(computer.difficulty);
             renderer.updateBoard();
+            isWinner = checkIfWinner(computer.symbol, gameBoard.xoArray);
+            endGame(isWinner, computer.name);
+            setTimeout(() => {
+              renderer.updateBoard();
+            }, "1200");
           }, "300");
         } else {
           return;
         };
     })}};
-    return {loop};
+  const checkIfWinner = (xo, arr) => {
+    console.log(gameBoard.xoArray);
+    if (
+      (arr[0] === xo && arr[1] === xo && arr[2] === xo) ||
+      (arr[3] === xo && arr[4] === xo && arr[5] === xo) ||
+      (arr[6] === xo && arr[7] === xo && arr[8] === xo) || 
+      (arr[0] === xo && arr[3] === xo && arr[6] === xo) ||
+      (arr[1] === xo && arr[4] === xo && arr[7] === xo) ||
+      (arr[2] === xo && arr[5] === xo && arr[8] === xo) ||
+      (arr[0] === xo && arr[4] === xo && arr[8] === xo) ||
+      (arr[2] === xo && arr[4] === xo && arr[6] === xo)) {
+      return true;
+    } else if (!arr.includes("")) {
+      return "tie";
+    } else {
+      return false;
+    };
+  };
+  const endGame = (isWinner, name) => {
+    if (isWinner != false) {
+      if (isWinner === true && name === "player") {
+        player.score += 1;
+        console.log(name + " won");
+      } else if (isWinner === true && name === "computer") {
+        computer.score += 1
+        console.log(name + " won");
+      } else if (isWinner === "tie") {
+        console.log("no one won");
+      }
+      for (let i = 0; i < 9; i++) {
+        gameBoard.xoArray[i] = "";
+      };
+    } else if (isWinner === false) {
+      return;
+    };
+  };
+  return {loop, checkIfWinner};
 })();
 
 renderer.difficultyButtonEvent();

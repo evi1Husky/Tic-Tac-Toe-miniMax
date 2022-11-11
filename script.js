@@ -57,12 +57,14 @@ const game = (() => {
         if (gameBoard.xoArray[i] === "") {
           gameBoard.xoArray[i] = player.symbol;
           renderer.updateBoard();
-        }
+        } else {
+          return;
+        };
         setTimeout(() => {
           computer.computerMove();
           renderer.updateBoard();
-        }, "300")
-        console.log(gameBoard.xoArray)
+        }, "300");
+        console.log(gameBoard.xoArray);
       })}};
     return {loop};
 })();

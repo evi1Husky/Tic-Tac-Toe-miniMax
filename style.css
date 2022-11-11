@@ -120,6 +120,19 @@ header {
   transition: border 0s;
 }
 
+.xo:nth-child(1):focus,
+.xo:nth-child(2):focus,
+.xo:nth-child(3):focus,
+.xo:nth-child(4):focus,
+.xo:nth-child(5):focus,
+.xo:nth-child(6):focus,
+.xo:nth-child(7):focus,
+.xo:nth-child(8):focus,
+.xo:nth-child(9):focus {
+  border-color: #575b63;
+  transition: border 2s;
+}
+
 .stats {
   color: #767c86;
 }
@@ -142,7 +155,7 @@ header {
   align-self: flex-start;
   margin-left: 6.5rem;
   cursor: pointer;
-  transition: color 1s;
+  transition: color 1.3s;
 }
 
 .easy {

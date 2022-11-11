@@ -153,13 +153,21 @@ header {
   color: #767c86;
   height: 3rem;
   align-self: flex-start;
-  margin-left: 6.5rem;
+  margin-left: 6rem;
   cursor: pointer;
   transition: color 1.3s;
 }
 
 .easy {
   color: #73c768;
+}
+
+.medium {
+  color: #5bafe6;
+}
+
+.unbeatable {
+  color: #ff8383;
 }
 
 .difficulty-button:hover {

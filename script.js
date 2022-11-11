@@ -23,7 +23,26 @@ const renderer = (() => {
   const updateGameStats = () => {
     gameStats.innerHTML = `player:&nbsp;&nbsp;<span>${player.score}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computer:&nbsp;&nbsp;<span>${computer.score}</span></p>`
   };
-  return {boardSquares, updateBoard};
+  const getDifficultyButton = () => document.querySelector(".difficulty-button");
+  const difficultyButton = getDifficultyButton();
+  const difficultyButtonEvent = () => difficultyButton.addEventListener("click", () => {
+    switch (computer.difficulty) {
+      case "easy":
+        computer.difficulty = "medium";
+        difficultyButton.innerHTML = `difficulty:&nbsp;<span class="medium">medium</span>`
+        break;
+      case "medium":
+        computer.difficulty = "unbeatable";
+        difficultyButton.innerHTML = `difficulty:&nbsp;<span class="unbeatable">unbeatable</span>`
+        break;
+      case "unbeatable":
+        computer.difficulty = "easy";
+        difficultyButton.innerHTML = `difficulty:&nbsp;<span class="easy">easy</span>`
+        break;
+    }
+    console.log(`${computer.difficulty} difficulty`);
+  });
+  return {boardSquares, updateBoard, difficultyButtonEvent,};
 })();
 
 const player = (() => {
@@ -48,13 +67,13 @@ const computer = (() => {
     const computerChoice = availableSquares[Math.random() * availableSquares.length | 0];
     gameBoard.xoArray[computerChoice] = computer.symbol;
   }
-  const computerMove = () => {
+  const computerMove = (difficulty) => {
     if (difficulty === "easy") {
       easyMove();
     } else if (difficulty === "medium") {
-      alert("medium move");
+      console.log("medium move");
     } else if (difficulty === "unbeatable") {
-      alert("unbeatable move");
+      console.log("unbeatable move");
     };
   };
   return {symbol, color, score, difficulty, computerMove};
@@ -68,7 +87,7 @@ const game = (() => {
           gameBoard.xoArray[i] = player.symbol;
           renderer.updateBoard();
           setTimeout(() => {
-            computer.computerMove();
+            computer.computerMove(computer.difficulty);
             renderer.updateBoard();
           }, "300");
         } else {
@@ -78,5 +97,6 @@ const game = (() => {
     return {loop};
 })();
 
+renderer.difficultyButtonEvent();
 renderer.updateBoard();
 game.loop();

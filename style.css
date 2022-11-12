@@ -81,6 +81,15 @@ header {
   border: 0.1rem solid #575b63;
   background: none;
   transition: border 1.3s;
+  animation-name: none;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes grow {
+  0%   {font-size: 0.1rem;;}
+  50%  {font-size: 8.7rem;;}
+  100% {font-size: 6rem;;}
 }
 
 .xo:nth-child(1),

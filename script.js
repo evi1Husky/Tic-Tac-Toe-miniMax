@@ -72,8 +72,15 @@ const renderer = (() => {
       computerStats.style.color = "inherit";
     }
   };
+  const xoAnimation = (xo) => {
+    console.log(xo)
+    xo.style.animationName = "grow";
+    setTimeout(function () {
+      xo.style.animationName = "none";
+    }, "500");
+  };
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
-          enableButtons, changeStatsColor};
+          enableButtons, changeStatsColor, xoAnimation};
 })();
 
 const player = (() => {
@@ -103,6 +110,7 @@ const computer = (() => {
     const availableSquares = getAvailableSquares();
     const computerChoice = availableSquares[Math.random() * availableSquares.length | 0];
     gameBoard.xoArray[computerChoice] = computer.symbol;
+    renderer.xoAnimation(renderer.boardSquares[computerChoice]);
   }
   const computerMove = (difficulty) => {
     if (difficulty === "easy") {
@@ -123,11 +131,13 @@ const game = (() => {
         if (gameBoard.xoArray[i] === "") {
           renderer.changeStatsColor("player");
           gameBoard.xoArray[i] = player.symbol;
+          renderer.xoAnimation(renderer.boardSquares[i]);
           renderer.disableButtons();
           renderer.updateBoard();
           let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
           if (isWinner === true || isWinner === "tie") {
+            renderer.boardSquares[i].focus();
             return;
           };
           renderer.changeStatsColor("computer");
@@ -138,7 +148,8 @@ const game = (() => {
             endGame(isWinner, computer.name);
             renderer.enableButtons();
             renderer.changeStatsColor("player");
-          }, "500");
+            renderer.boardSquares[i].focus();
+          }, "700");
         } else {
           return;
         };

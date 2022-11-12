@@ -19,10 +19,13 @@ const renderer = (() => {
     };
     updateGameStats();
   };
-  const getStats = () => document.querySelector(".stats");
-  const gameStats = getStats();
+  const getPlayerScore = () => document.getElementById("stats-player-score");
+  const getComputerScore = () => document.getElementById("stats-computer-score");
+  const playerScore = getPlayerScore();
+  const computerScore = getComputerScore();
   const updateGameStats = () => {
-    gameStats.innerHTML = `player:&nbsp;&nbsp;<span>${player.score}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;computer:&nbsp;&nbsp;<span>${computer.score}</span></p>`
+    playerScore.innerHTML = player.score;
+    computerScore.innerHTML = computer.score;
   };
   const getDifficultyButton = () => document.querySelector(".difficulty-button");
   const difficultyButton = getDifficultyButton();
@@ -44,17 +47,33 @@ const renderer = (() => {
     console.log(`${computer.difficulty} difficulty`);
   });
   const disableButtons = () => {
-      for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 9; i++) {
         boardSquares[i].disabled = true;
     };
   };
   const enableButtons = () => {
     for (let i = 0; i < 9; i++) {
       boardSquares[i].disabled = false;
+    };
   };
-};
+  const getPlayerStats = () => document.getElementById("stats-player");
+  const getComputerStats = () => document.getElementById("stats-computer");
+  const playerStats = getPlayerStats();
+  const computerStats = getComputerStats();
+  const changeStatsColor = (move) => {
+    if (move === "player") {
+      playerStats.style.color = "#5bafe6";
+      computerStats.style.color = "inherit";
+    } else if (move === "computer") {
+      computerStats.style.color = "#ff8383";
+      playerStats.style.color = "inherit";
+    } else if (move === "none") {
+      playerStats.style.color = "inherit";
+      computerStats.style.color = "inherit";
+    }
+  };
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
-          enableButtons};
+          enableButtons, changeStatsColor};
 })();
 
 const player = (() => {
@@ -102,6 +121,7 @@ const game = (() => {
     for (let i = 0; i < 9; i++) {
       renderer.boardSquares[i].addEventListener("click", () => {
         if (gameBoard.xoArray[i] === "") {
+          renderer.changeStatsColor("player");
           gameBoard.xoArray[i] = player.symbol;
           renderer.disableButtons();
           renderer.updateBoard();
@@ -110,13 +130,15 @@ const game = (() => {
           if (isWinner === true || isWinner === "tie") {
             return;
           };
+          renderer.changeStatsColor("computer");
           setTimeout(() => {
             computer.computerMove(computer.difficulty);
             renderer.updateBoard();
             isWinner = checkIfWinner(computer.symbol, gameBoard.xoArray);
             endGame(isWinner, computer.name);
             renderer.enableButtons();
-          }, "400");
+            renderer.changeStatsColor("player");
+          }, "500");
         } else {
           return;
         };
@@ -153,9 +175,11 @@ const game = (() => {
       for (let i = 0; i < 9; i++) {
         gameBoard.xoArray[i] = "";
       };
+      renderer.changeStatsColor("none");
       changePlayerSymbol(player.symbol);
       setTimeout(() => {
         renderer.updateBoard();
+        renderer.changeStatsColor("player");
       }, "1200");
       renderer.enableButtons();
     } else if (isWinner === false) {
@@ -180,3 +204,4 @@ const game = (() => {
 renderer.difficultyButtonEvent();
 renderer.updateBoard();
 game.loop();
+renderer.changeStatsColor("player");

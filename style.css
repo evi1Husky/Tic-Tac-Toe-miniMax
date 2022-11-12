@@ -82,14 +82,14 @@ header {
   background: none;
   transition: border 1.3s;
   animation-name: none;
-  animation-duration: 0.5s;
+  animation-duration: 0.4s;
   animation-iteration-count: infinite;
 }
 
 @keyframes grow {
-  0%   {font-size: 0.1rem;;}
-  50%  {font-size: 8.5rem;;}
-  100% {font-size: 6rem;;}
+  0%   {font-size: 0rem; width: none;}
+  15%  {font-size: 8.5rem; width: 10.2rem;}
+  100% {font-size: 6rem; width: none;}
 }
 
 .xo:nth-child(1),
@@ -248,8 +248,8 @@ header {
     }
 
     @keyframes grow {
-      50%  {font-size: 10.5rem;;}
-      100% {font-size: 9rem;;}
+      15%  {font-size: 10.5rem; width: 12.6rem;;}
+      100% {font-size: 9rem; width: none;;}
     }
 }
 
@@ -262,9 +262,10 @@ header {
   .xo {
     font-size: 8rem;
   }
+
   @keyframes grow {
-    50%  {font-size: 9.2rem;;}
-    100% {font-size: 8rem;;}
+    15%  {font-size: 9.2rem; width: 10.9rem;}
+    100% {font-size: 8rem; width: none;}
   }
 }
 @media (max-width:450px) and (max-height: 660px) {
@@ -276,9 +277,10 @@ header {
   .xo {
     font-size: 7rem;
   }
+
   @keyframes grow {
-    50%  {font-size: 8.2rem;;}
-    100% {font-size: 7rem;;}
+    15%  {font-size: 8.2rem; width: 10.2rem;}
+    100% {font-size: 7rem; width: none;}
   }
 }
 
@@ -292,8 +294,8 @@ header {
     font-size: 4rem;
   }
   @keyframes grow {
-    50%  {font-size: 5.2rem;;}
-    100% {font-size: 4rem;;}
+    15%  {font-size: 6.2rem; width: 7.5rem;}
+    100% {font-size: 4rem; width: none;}
   }
 }
 
@@ -307,7 +309,7 @@ header {
     font-size: 3rem;
   }
   @keyframes grow {
-    50%  {font-size: 4.2rem;;}
-    100% {font-size: 3rem;;}
+    15%  {font-size: 4.2rem; width: 5rem;}
+    100% {font-size: 3rem; width: none;}
   }
 }

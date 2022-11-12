@@ -6,8 +6,7 @@ const gameBoard = (() => {
 })();
 
 const renderer = (() => {
-  const getBoardSquares = () => document.querySelectorAll(".xo");
-  const boardSquares = getBoardSquares();
+  const boardSquares = document.querySelectorAll(".xo");
   const updateBoard = () => {
     for (let i = 0; i < 9; i++) {
       boardSquares[i].innerHTML = gameBoard.xoArray[i];
@@ -19,16 +18,13 @@ const renderer = (() => {
     };
     updateGameStats();
   };
-  const getPlayerScore = () => document.getElementById("stats-player-score");
-  const getComputerScore = () => document.getElementById("stats-computer-score");
-  const playerScore = getPlayerScore();
-  const computerScore = getComputerScore();
+  const playerScore = document.getElementById("stats-player-score");
+  const computerScore = document.getElementById("stats-computer-score");
   const updateGameStats = () => {
     playerScore.innerHTML = player.score;
     computerScore.innerHTML = computer.score;
   };
-  const getDifficultyButton = () => document.querySelector(".difficulty-button");
-  const difficultyButton = getDifficultyButton();
+  const difficultyButton = document.querySelector(".difficulty-button");
   const difficultyButtonEvent = () => difficultyButton.addEventListener("click", () => {
     switch (computer.difficulty) {
       case "easy":
@@ -56,10 +52,8 @@ const renderer = (() => {
       boardSquares[i].disabled = false;
     };
   };
-  const getPlayerStats = () => document.getElementById("stats-player");
-  const getComputerStats = () => document.getElementById("stats-computer");
-  const playerStats = getPlayerStats();
-  const computerStats = getComputerStats();
+  const playerStats = document.getElementById("stats-player");
+  const computerStats = document.getElementById("stats-computer");
   const changeStatsColor = (move) => {
     if (move === "player") {
       playerStats.style.color = "#5bafe6";
@@ -73,14 +67,17 @@ const renderer = (() => {
     }
   };
   const xoAnimation = (xo) => {
-    console.log(xo)
     xo.style.animationName = "grow";
     setTimeout(function () {
       xo.style.animationName = "none";
-    }, "500");
+    }, "400");
+  };
+  const bannerText = document.querySelector(".banner-text");
+  const updateBannerDisplay = (message) => {
+    bannerText.innerHTML = message;
   };
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
-          enableButtons, changeStatsColor, xoAnimation};
+          enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay};
 })();
 
 const player = (() => {
@@ -131,9 +128,9 @@ const game = (() => {
         if (gameBoard.xoArray[i] === "") {
           renderer.changeStatsColor("player");
           gameBoard.xoArray[i] = player.symbol;
-          renderer.xoAnimation(renderer.boardSquares[i]);
           renderer.disableButtons();
           renderer.updateBoard();
+          renderer.xoAnimation(renderer.boardSquares[i]);
           let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
           if (isWinner === true || isWinner === "tie") {

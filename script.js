@@ -1,5 +1,7 @@
 const gameBoard = (() => {
-  const xoArray = ["", "", "", "", "", "", "", "", ""];
+  const xoArray = ["", "", "",
+                   "", "", "",
+                   "", "", ""];
   return {xoArray};
 })();
 
@@ -41,7 +43,18 @@ const renderer = (() => {
     }
     console.log(`${computer.difficulty} difficulty`);
   });
-  return {boardSquares, updateBoard, difficultyButtonEvent,};
+  const disableButtons = () => {
+      for (let i = 0; i < 9; i++) {
+        boardSquares[i].disabled = true;
+    };
+  };
+  const enableButtons = () => {
+    for (let i = 0; i < 9; i++) {
+      boardSquares[i].disabled = false;
+  };
+};
+  return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
+          enableButtons};
 })();
 
 const player = (() => {
@@ -58,13 +71,17 @@ const computer = (() => {
   let symbol = "o";
   const color = "#ff8383";
   let difficulty = "easy";
-  const easyMove = () => {
+  const getAvailableSquares = () => {
     const availableSquares = [];
     for (let [index, xo] of gameBoard.xoArray.entries()) {
       if (xo === "") {
         availableSquares.push(index);
       };
     };
+    return availableSquares;
+  };
+  const easyMove = () => {
+    const availableSquares = getAvailableSquares();
     const computerChoice = availableSquares[Math.random() * availableSquares.length | 0];
     gameBoard.xoArray[computerChoice] = computer.symbol;
   }
@@ -86,12 +103,10 @@ const game = (() => {
       renderer.boardSquares[i].addEventListener("click", () => {
         if (gameBoard.xoArray[i] === "") {
           gameBoard.xoArray[i] = player.symbol;
+          renderer.disableButtons();
           renderer.updateBoard();
           let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
-          setTimeout(() => {
-            renderer.updateBoard();
-          }, "1200");
           if (isWinner === true || isWinner === "tie") {
             return;
           };
@@ -100,10 +115,8 @@ const game = (() => {
             renderer.updateBoard();
             isWinner = checkIfWinner(computer.symbol, gameBoard.xoArray);
             endGame(isWinner, computer.name);
-            setTimeout(() => {
-              renderer.updateBoard();
-            }, "1200");
-          }, "300");
+            renderer.enableButtons();
+          }, "400");
         } else {
           return;
         };
@@ -140,8 +153,25 @@ const game = (() => {
       for (let i = 0; i < 9; i++) {
         gameBoard.xoArray[i] = "";
       };
+      changePlayerSymbol(player.symbol);
+      setTimeout(() => {
+        renderer.updateBoard();
+      }, "1200");
+      renderer.enableButtons();
     } else if (isWinner === false) {
       return;
+    };
+  };
+  const changePlayerSymbol = (symbol) => {
+    switch (symbol) {
+      case "x":
+        player.symbol = "o";
+        computer.symbol = "x";
+        break;
+      case "o":
+        player.symbol = "x";
+        computer.symbol = "o";
+        break;
     };
   };
   return {loop, checkIfWinner};

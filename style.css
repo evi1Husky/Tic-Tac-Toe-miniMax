@@ -88,7 +88,7 @@ header {
 
 @keyframes grow {
   0%   {font-size: 0.1rem;;}
-  50%  {font-size: 8.7rem;;}
+  50%  {font-size: 8.5rem;;}
   100% {font-size: 6rem;;}
 }
 

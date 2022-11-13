@@ -92,6 +92,7 @@ header {
   animation-name: none;
   animation-duration: 0.4s;
   animation-iteration-count: infinite;
+  transition: color 0s;
 }
 
 @keyframes grow {

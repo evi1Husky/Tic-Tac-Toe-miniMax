@@ -2,7 +2,13 @@ const gameBoard = (() => {
   const xoArray = ["", "", "",
                    "", "", "",
                    "", "", ""];
-  return {xoArray};
+  let winningXORow = [];
+  const pushToWinningArray = (...arguments) => {
+    winningXORow.length = 0;
+    winningXORow.push(...arguments);
+    console.log(winningXORow);
+  }
+  return {xoArray, winningXORow, pushToWinningArray};
 })();
 
 const renderer = (() => {
@@ -80,8 +86,31 @@ const renderer = (() => {
       bannerText.style.animationName = "none";
     }, "400");
   };
+  let winningColor = "";
+  const endGameAnimation = (name) => {
+    switch (name) {
+      case "player":
+        winningColor = "#73C767";
+        break;
+      case "computer":
+        winningColor = "#ff3e3e";
+        break;
+    }
+    boardSquares[gameBoard.winningXORow[0]].style.transition = "color 0.5s";
+    boardSquares[gameBoard.winningXORow[1]].style.transition = "color 0.5s";
+    boardSquares[gameBoard.winningXORow[2]].style.transition = "color 0.5s";
+    boardSquares[gameBoard.winningXORow[0]].style.color = winningColor;
+    boardSquares[gameBoard.winningXORow[1]].style.color = winningColor;
+    boardSquares[gameBoard.winningXORow[2]].style.color = winningColor;
+    setTimeout(function () {
+      boardSquares[gameBoard.winningXORow[0]].style.transition = "color 0s";
+      boardSquares[gameBoard.winningXORow[1]].style.transition = "color 0s";
+      boardSquares[gameBoard.winningXORow[2]].style.transition = "color 0s";
+    }, "500");
+  }
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
-          enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay};
+          enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay,
+          endGameAnimation};
 })();
 
 const player = (() => {
@@ -158,32 +187,47 @@ const game = (() => {
         };
     })}};
   const checkIfWinner = (xo, arr) => {
-    console.log(gameBoard.xoArray);
-    if (
-      (arr[0] === xo && arr[1] === xo && arr[2] === xo) ||
-      (arr[3] === xo && arr[4] === xo && arr[5] === xo) ||
-      (arr[6] === xo && arr[7] === xo && arr[8] === xo) || 
-      (arr[0] === xo && arr[3] === xo && arr[6] === xo) ||
-      (arr[1] === xo && arr[4] === xo && arr[7] === xo) ||
-      (arr[2] === xo && arr[5] === xo && arr[8] === xo) ||
-      (arr[0] === xo && arr[4] === xo && arr[8] === xo) ||
-      (arr[2] === xo && arr[4] === xo && arr[6] === xo)) {
+    if (arr[0] === xo && arr[1] === xo && arr[2] === xo) {
+      gameBoard.pushToWinningArray(0, 1, 2);
       return true;
-    } else if (!arr.includes("")) {
+      } else if (arr[3] === xo && arr[4] === xo && arr[5] === xo) {
+      gameBoard.pushToWinningArray(3, 4, 5);
+      return true;
+      } else if (arr[6] === xo && arr[7] === xo && arr[8] === xo) {
+      gameBoard.pushToWinningArray(6, 7, 8);
+      return true;
+      } else if (arr[0] === xo && arr[3] === xo && arr[6] === xo) {
+      gameBoard.pushToWinningArray(0, 3, 6);
+      return true;
+      } else if (arr[1] === xo && arr[4] === xo && arr[7] === xo) {
+      gameBoard.pushToWinningArray(1, 4, 7);
+      return true;
+      } else if (arr[2] === xo && arr[5] === xo && arr[8] === xo) {
+      gameBoard.pushToWinningArray(2, 5, 8);
+      return true;
+      } else if (arr[0] === xo && arr[4] === xo && arr[8] === xo) {
+      gameBoard.pushToWinningArray(0, 4, 8);
+      return true;
+      } else if (arr[2] === xo && arr[4] === xo && arr[6] === xo) {
+      gameBoard.pushToWinningArray(2, 4, 6);
+      return true;
+      } else if (!arr.includes("")) {
       return "tie";
-    } else {
+      } else {
       return false;
+      };
     };
-  };
   const endGame = (isWinner, name) => {
     if (isWinner != false) {
       if (isWinner === true && name === "player") {
         player.score += 1;
         renderer.updateBannerDisplay(`${player.symbol.toUpperCase()} wins`);
+        renderer.endGameAnimation("player");
         console.log(name + " won");
       } else if (isWinner === true && name === "computer") {
         computer.score += 1
         renderer.updateBannerDisplay(`${computer.symbol.toUpperCase()} wins`);
+        renderer.endGameAnimation("computer");
         console.log(name + " won");
       } else if (isWinner === "tie") {
         renderer.updateBannerDisplay(`tie`);

@@ -53,6 +53,14 @@ header {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation-name: none;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes appear {
+0%   {opacity: 0%; transform: translate(-50%, -120%);}
+100% {opacity: 100%; transform: translate(-50%, -50%);}
 }
 
 .container {
@@ -309,7 +317,7 @@ header {
     font-size: 3rem;
   }
   @keyframes grow {
-    15%  {font-size: 4.2rem; width: 5rem;}
+    15%  {font-size: 4.2rem; width: 5.1rem;}
     100% {font-size: 3rem; width: none;}
   }
 }

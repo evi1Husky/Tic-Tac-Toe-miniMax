@@ -74,7 +74,11 @@ const renderer = (() => {
   };
   const bannerText = document.querySelector(".banner-text");
   const updateBannerDisplay = (message) => {
+    bannerText.style.animationName = "appear";
     bannerText.innerHTML = message;
+    setTimeout(function () {
+      bannerText.style.animationName = "none";
+    }, "400");
   };
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
           enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay};
@@ -131,6 +135,7 @@ const game = (() => {
           renderer.disableButtons();
           renderer.updateBoard();
           renderer.xoAnimation(renderer.boardSquares[i]);
+          renderer.updateBannerDisplay(`${computer.symbol.toUpperCase()} turn`);
           let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
           if (isWinner === true || isWinner === "tie") {
@@ -140,6 +145,7 @@ const game = (() => {
           renderer.changeStatsColor("computer");
           setTimeout(() => {
             computer.computerMove(computer.difficulty);
+            renderer.updateBannerDisplay(`${player.symbol.toUpperCase()} turn`);
             renderer.updateBoard();
             isWinner = checkIfWinner(computer.symbol, gameBoard.xoArray);
             endGame(isWinner, computer.name);
@@ -173,11 +179,14 @@ const game = (() => {
     if (isWinner != false) {
       if (isWinner === true && name === "player") {
         player.score += 1;
+        renderer.updateBannerDisplay(`${player.symbol.toUpperCase()} wins`);
         console.log(name + " won");
       } else if (isWinner === true && name === "computer") {
         computer.score += 1
+        renderer.updateBannerDisplay(`${computer.symbol.toUpperCase()} wins`);
         console.log(name + " won");
       } else if (isWinner === "tie") {
+        renderer.updateBannerDisplay(`tie`);
         console.log("no one won");
       }
       for (let i = 0; i < 9; i++) {
@@ -188,6 +197,7 @@ const game = (() => {
       setTimeout(() => {
         renderer.updateBoard();
         renderer.changeStatsColor("player");
+        renderer.updateBannerDisplay(`Tic-Tac-Toe`);
       }, "1200");
       renderer.enableButtons();
     } else if (isWinner === false) {

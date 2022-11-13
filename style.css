@@ -321,3 +321,9 @@ header {
     100% {font-size: 3rem; width: none;}
   }
 }
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .banner-text {
+    animation-duration: 0.5s;
+  }
+}

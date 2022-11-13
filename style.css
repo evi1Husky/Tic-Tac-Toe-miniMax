@@ -321,3 +321,10 @@ header {
     100% {font-size: 3rem; width: none;}
   }
 }
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  @keyframes appear {
+    0%   {opacity: 0%; transform: translate(-50%, -50%);}
+    100% {opacity: 100%; transform: translate(-50%, -50%);}
+    }
+}

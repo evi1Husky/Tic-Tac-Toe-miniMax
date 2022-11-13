@@ -321,11 +321,3 @@ header {
     100% {font-size: 3rem; width: none;}
   }
 }
-
-@supports (-webkit-backdrop-filter: blur(1px)) {
-  @keyframes appear {
-    0%   {font-size: clamp(0.1rem, 9vmin, 0rem);}
-    100% {font-size: clamp(0.1rem, 9vmin, 3.5rem);}
-    }
-}
-

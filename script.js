@@ -142,28 +142,103 @@ const computer = (() => {
   let symbol = "o";
   const color = "#ff8383";
   let difficulty = "easy";
-  const getAvailableSquares = () => {
-    const availableSquares = [];
-    for (let [index, xo] of gameBoard.xoArray.entries()) {
-      if (xo === "") {
-        availableSquares.push(index);
-      };
-    };
-    return availableSquares;
-  };
+
   const easyMove = () => {
-    const availableSquares = getAvailableSquares();
+    let xoArrayCopy = copyXOarray();
+    let availableSquares = getAvailableSquares(xoArrayCopy);
     const computerChoice = availableSquares[Math.random() * availableSquares.length | 0];
     gameBoard.xoArray[computerChoice] = computer.symbol;
     renderer.xoAnimation(renderer.boardSquares[computerChoice]);
   }
+
+  const copyXOarray = () => {
+    let xoArrayCopy = [...gameBoard.xoArray];
+    for (let i = 0; i < 9; i++) {
+      if (xoArrayCopy[i] === "") {
+        xoArrayCopy[i] = i;
+      } else {
+      };
+    };
+    return xoArrayCopy;
+  }
+
+  const getAvailableSquares = (xoArrayCopy) => {
+    return xoArrayCopy.filter(s => s != "o" && s != "x");
+  };
+
+  const unbeatableMove = () => {
+    let xoArrayCopy = copyXOarray();
+    const computerChoice = miniMax(xoArrayCopy, computer.symbol);
+    gameBoard.xoArray[computerChoice.index] = computer.symbol;
+    renderer.xoAnimation(renderer.boardSquares[computerChoice.index]);
+  }
+
+  const miniMax = (xoArrayCopy, currentPlayer) => {
+    let availableSquares = getAvailableSquares(xoArrayCopy);
+    if (checkIfWinner(player.symbol, xoArrayCopy)) {
+      return {score: -10};
+    } else if (checkIfWinner(computer.symbol, xoArrayCopy)) {
+      return {score: 10};
+    } else if (availableSquares.length === 0) {
+      return {score: 0};
+    }
+    let moves = [];
+    for (let i = 0; i < availableSquares.length; i++) {
+      let move = {};
+      move.index = xoArrayCopy[availableSquares[i]];
+      xoArrayCopy[availableSquares[i]] = currentPlayer;
+      if (currentPlayer === computer.symbol) {
+        let result = miniMax(xoArrayCopy, player.symbol);
+        move.score = result.score;
+      } else {
+        let result = miniMax(xoArrayCopy, computer.symbol);
+        move.score = result.score;
+      };
+      xoArrayCopy[availableSquares[i]] = move.index;
+      moves.push(move);
+    };
+    let bestMove;
+    if(currentPlayer === computer.symbol){
+      let bestScore = -10000;
+      for(let i = 0; i < moves.length; i++){
+        if(moves[i].score > bestScore){
+          bestScore = moves[i].score;
+          bestMove = i;
+        };
+      };
+    } else {
+      let bestScore = 10000;
+      for(let i = 0; i < moves.length; i++){
+        if(moves[i].score < bestScore){
+          bestScore = moves[i].score;
+          bestMove = i;
+        };
+      };
+    };
+    return moves[bestMove];
+  };
+
+  const checkIfWinner = (xo, arr) => {
+    if ((arr[0] === xo && arr[1] === xo && arr[2] === xo) ||
+      (arr[3] === xo && arr[4] === xo && arr[5] === xo) ||
+      (arr[6] === xo && arr[7] === xo && arr[8] === xo) ||
+      (arr[0] === xo && arr[3] === xo && arr[6] === xo) ||
+      (arr[1] === xo && arr[4] === xo && arr[7] === xo) ||
+      (arr[2] === xo && arr[5] === xo && arr[8] === xo) ||
+      (arr[0] === xo && arr[4] === xo && arr[8] === xo) ||
+      (arr[2] === xo && arr[4] === xo && arr[6] === xo)) {
+      return true;
+      } else {
+      return false;
+      };
+    };
+  
   const computerMove = (difficulty) => {
     if (difficulty === "easy") {
       easyMove();
     } else if (difficulty === "medium") {
-      console.log("medium move");
     } else if (difficulty === "unbeatable") {
-      console.log("unbeatable move");
+      unbeatableMove();
     };
   };
   return {name, symbol, color, score, difficulty, computerMove};
@@ -171,10 +246,12 @@ const computer = (() => {
 
 const game = (() => {
   let isWinner = false;
+  let currentPlayer;
   const loop = () => {
     for (let i = 0; i < 9; i++) {
       renderer.boardSquares[i].addEventListener("click", () => {
         if (gameBoard.xoArray[i] === "") {
+          game.currentPlayer = player.symbol;
           renderer.changeStatsColor("player");
           gameBoard.xoArray[i] = player.symbol;
           renderer.disableButtons();
@@ -189,6 +266,7 @@ const game = (() => {
             }, "2000");
             return;
           };
+          game.currentPlayer = computer.symbol;
           renderer.changeStatsColor("computer");
           setTimeout(() => {
             computer.computerMove(computer.difficulty);
@@ -281,7 +359,7 @@ const game = (() => {
         break;
     };
   };
-  return {loop, checkIfWinner};
+  return {loop, checkIfWinner, currentPlayer};
 })();
 
 renderer.difficultyButtonEvent();

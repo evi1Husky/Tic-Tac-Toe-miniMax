@@ -103,8 +103,7 @@ header {
 @keyframes shrink {
   0%   {font-size: 6rem; width: none;}
   30%  {font-size: 6rem; width: none;}
-  60% {opacity: 100%;}
-  100% {font-size: 0.1rem; width: none; opacity: 0%;}
+  100% {font-size: 0.1rem; width: none;}
 }
 
 @keyframes shrinkGrow {
@@ -112,8 +111,6 @@ header {
   10%  {font-size: 8.3rem; width: none;}
   11%  {font-size: 6rem; width: none;}
   50% {font-size: 6rem; width: none;}
-  70% {opacity: 100%;}
-  100% {opacity: 0%;}
   100% {font-size: 0.1rem; width: none;}
 } 
 

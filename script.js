@@ -184,7 +184,9 @@ const game = (() => {
           isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
           if (isWinner === true || isWinner === "tie") {
-            renderer.boardSquares[i].focus();
+            setTimeout(() => {
+              renderer.boardSquares[i].focus();
+            }, "2000");
             return;
           };
           renderer.changeStatsColor("computer");

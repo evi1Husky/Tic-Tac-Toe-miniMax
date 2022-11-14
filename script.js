@@ -154,7 +154,7 @@ const player = (() => {
   return {name, symbol, color, score};
 })();
 
-//computer object, uses miniMax algorythm when difficulty set to unbeatable
+//computer object, uses miniMax algorithm when difficulty set to unbeatable
 
 const computer = (() => {
   const name = "computer";

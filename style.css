@@ -108,7 +108,7 @@ header {
 
 @keyframes shrinkGrow {
   0%   {font-size: 6rem; width: none;}
-  10%  {font-size: 8.7rem; width: none;}
+  10%  {font-size: 8.3rem; width: none;}
   11%  {font-size: 6rem; width: none;}
   50% {font-size: 6rem; width: none;}
   100% {font-size: 0.1rem; width: none;}
@@ -276,8 +276,8 @@ header {
 
     @keyframes shrinkGrow {
       0%   {font-size: 9rem; width: none;}
-      10%  {font-size: 10.5rem; width: none;}
-      11%  {font-size: 9rem; width: none;}
+      10%  {font-size: 10.3rem; width: none;}
+      11%  {font-size: 9.2rem; width: none;}
       50% {font-size: 9rem; width: none;}
       100% {font-size: 0.1rem; width: none;}
     } 
@@ -299,7 +299,7 @@ header {
   }
   @keyframes shrinkGrow {
     0%   {font-size: 8rem; width: none;}
-    10%  {font-size: 9.2rem; width: none;}
+    10%  {font-size: 9.1rem; width: none;}
     11%  {font-size: 8rem; width: none;}
     50% {font-size: 8rem; width: none;}
     100% {font-size: 0.1rem; width: none;}
@@ -321,7 +321,7 @@ header {
   }
   @keyframes shrinkGrow {
     0%   {font-size: 7rem; width: none;}
-    10%  {font-size: 8.5rem; width: none;}
+    10%  {font-size: 8.2rem; width: none;}
     11%  {font-size: 7rem; width: none;}
     50% {font-size: 7rem; width: none;}
     100% {font-size: 0.1rem; width: none;}
@@ -343,7 +343,7 @@ header {
   }
   @keyframes shrinkGrow {
     0%   {font-size: 4rem; width: none;}
-    10%  {font-size: 6.2rem; width: none;}
+    10%  {font-size: 5.9rem; width: none;}
     11%  {font-size: 4rem; width: none;}
     50% {font-size: 4rem; width: none;}
     100% {font-size: 0.1rem; width: none;}
@@ -365,7 +365,7 @@ header {
   }
   @keyframes shrinkGrow {
     0%   {font-size: 3rem; width: none;}
-    10%  {font-size: 4.2rem; width: none;}
+    10%  {font-size: 3.9rem; width: none;}
     11%  {font-size: 3rem; width: none;}
     50% {font-size: 3rem; width: none;}
     100% {font-size: 0.1rem; width: none;}

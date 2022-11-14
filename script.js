@@ -2,11 +2,9 @@ const gameBoard = (() => {
   const xoArray = ["", "", "",
                    "", "", "",
                    "", "", ""];
-  let winningXORow = [];
+  const winningXORow = [];
   const pushToWinningArray = (...arguments) => {
-    winningXORow.length = 0;
     winningXORow.push(...arguments);
-    console.log(winningXORow);
   }
   return {xoArray, winningXORow, pushToWinningArray};
 })();
@@ -73,9 +71,12 @@ const renderer = (() => {
     }
   };
   const xoAnimation = (xo) => {
+    xo.style.animationDuration = "0.4s"
     xo.style.animationName = "grow";
     setTimeout(function () {
-      xo.style.animationName = "none";
+      if (gameBoard.winningXORow.length === 0) {
+        xo.style.animationName = "none";
+      }
     }, "400");
   };
   const bannerText = document.querySelector(".banner-text");
@@ -95,22 +96,36 @@ const renderer = (() => {
       case "computer":
         winningColor = "#ff3e3e";
         break;
-    }
-    boardSquares[gameBoard.winningXORow[0]].style.transition = "color 0.5s";
-    boardSquares[gameBoard.winningXORow[1]].style.transition = "color 0.5s";
-    boardSquares[gameBoard.winningXORow[2]].style.transition = "color 0.5s";
+    };
+  if (gameBoard.winningXORow.length === 3) {
     boardSquares[gameBoard.winningXORow[0]].style.color = winningColor;
     boardSquares[gameBoard.winningXORow[1]].style.color = winningColor;
     boardSquares[gameBoard.winningXORow[2]].style.color = winningColor;
-    setTimeout(function () {
-      boardSquares[gameBoard.winningXORow[0]].style.transition = "color 0s";
-      boardSquares[gameBoard.winningXORow[1]].style.transition = "color 0s";
-      boardSquares[gameBoard.winningXORow[2]].style.transition = "color 0s";
-    }, "500");
   }
+  };
+  const clearBoardAnimation = () => {
+    for (let i = 0; i < 9; i++) {
+      boardSquares[i].style.animationDuration = "2s"
+      boardSquares[i].style.animationName = "shrink";
+    };
+  if (gameBoard.winningXORow.length === 3) {
+    boardSquares[gameBoard.winningXORow[0]].style.animationName = "shrinkGrow";
+    boardSquares[gameBoard.winningXORow[1]].style.animationName = "shrinkGrow";
+    boardSquares[gameBoard.winningXORow[2]].style.animationName = "shrinkGrow";
+  } else if (gameBoard.winningXORow.length === 9) {
+    for (let i = 0; i < 9; i++) {
+      boardSquares[gameBoard.winningXORow[i]].style.animationName = "shrinkGrow";
+    }
+  }
+    setTimeout(function () {
+      for (let i = 0; i < 9; i++) {
+        boardSquares[i].style.animationName = "none";
+      };
+    }, "2000");
+  };
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
           enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay,
-          endGameAnimation};
+          endGameAnimation, clearBoardAnimation};
 })();
 
 const player = (() => {
@@ -155,6 +170,7 @@ const computer = (() => {
 })();
 
 const game = (() => {
+  let isWinner = false;
   const loop = () => {
     for (let i = 0; i < 9; i++) {
       renderer.boardSquares[i].addEventListener("click", () => {
@@ -165,7 +181,7 @@ const game = (() => {
           renderer.updateBoard();
           renderer.xoAnimation(renderer.boardSquares[i]);
           renderer.updateBannerDisplay(`${computer.symbol.toUpperCase()} turn`);
-          let isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
+          isWinner = checkIfWinner(player.symbol, gameBoard.xoArray);
           endGame(isWinner, player.name);
           if (isWinner === true || isWinner === "tie") {
             renderer.boardSquares[i].focus();
@@ -212,6 +228,7 @@ const game = (() => {
       gameBoard.pushToWinningArray(2, 4, 6);
       return true;
       } else if (!arr.includes("")) {
+      gameBoard.pushToWinningArray(0, 1, 2, 3, 4, 5, 6, 7, 8);
       return "tie";
       } else {
       return false;
@@ -233,17 +250,19 @@ const game = (() => {
         renderer.updateBannerDisplay(`tie`);
         console.log("no one won");
       }
-      for (let i = 0; i < 9; i++) {
-        gameBoard.xoArray[i] = "";
-      };
-      renderer.changeStatsColor("none");
-      changePlayerSymbol(player.symbol);
+      renderer.clearBoardAnimation();
       setTimeout(() => {
-        renderer.updateBoard();
+        renderer.changeStatsColor("none");
+        changePlayerSymbol(player.symbol);
         renderer.changeStatsColor("player");
         renderer.updateBannerDisplay(`Tic-Tac-Toe`);
-      }, "1200");
-      renderer.enableButtons();
+        renderer.enableButtons();
+        for (let i = 0; i < 9; i++) {
+          gameBoard.xoArray[i] = "";
+        };
+        gameBoard.winningXORow.length = 0;
+        renderer.updateBoard();
+      }, "2000");
     } else if (isWinner === false) {
       return;
     };

@@ -1,13 +1,19 @@
+// a lot of spaghetti code below 
+
 const gameBoard = (() => {
   const xoArray = ["", "", "",
                    "", "", "",
                    "", "", ""];
   const winningXORow = [];
+
   const pushToWinningArray = (...arguments) => {
     winningXORow.push(...arguments);
   }
+
   return {xoArray, winningXORow, pushToWinningArray};
 })();
+
+//renderer object, updates the board and creates animations
 
 const renderer = (() => {
   const boardSquares = document.querySelectorAll(".xo");
@@ -22,20 +28,22 @@ const renderer = (() => {
     };
     updateGameStats();
   };
+
   const playerScore = document.getElementById("stats-player-score");
   const computerScore = document.getElementById("stats-computer-score");
   const updateGameStats = () => {
     playerScore.innerHTML = player.score;
     computerScore.innerHTML = computer.score;
   };
+
   const difficultyButton = document.querySelector(".difficulty-button");
   const difficultyButtonEvent = () => difficultyButton.addEventListener("click", () => {
     switch (computer.difficulty) {
       case "easy":
-        computer.difficulty = "medium";
-        difficultyButton.innerHTML = `difficulty:&nbsp;<span class="medium">medium</span>`
+        computer.difficulty = "normal";
+        difficultyButton.innerHTML = `difficulty:&nbsp;<span class="normal">normal</span>`
         break;
-      case "medium":
+      case "normal":
         computer.difficulty = "unbeatable";
         difficultyButton.innerHTML = `difficulty:&nbsp;<span class="unbeatable">unbeatable</span>`
         break;
@@ -43,19 +51,21 @@ const renderer = (() => {
         computer.difficulty = "easy";
         difficultyButton.innerHTML = `difficulty:&nbsp;<span class="easy">easy</span>`
         break;
-    }
-    console.log(`${computer.difficulty} difficulty`);
+    };
   });
+
   const disableButtons = () => {
     for (let i = 0; i < 9; i++) {
         boardSquares[i].disabled = true;
     };
   };
+
   const enableButtons = () => {
     for (let i = 0; i < 9; i++) {
       boardSquares[i].disabled = false;
     };
   };
+
   const playerStats = document.getElementById("stats-player");
   const computerStats = document.getElementById("stats-computer");
   const changeStatsColor = (move) => {
@@ -68,17 +78,19 @@ const renderer = (() => {
     } else if (move === "none") {
       playerStats.style.color = "inherit";
       computerStats.style.color = "inherit";
-    }
+    };
   };
+
   const xoAnimation = (xo) => {
     xo.style.animationDuration = "0.4s"
     xo.style.animationName = "grow";
     setTimeout(function () {
       if (gameBoard.winningXORow.length === 0) {
         xo.style.animationName = "none";
-      }
+      };
     }, "400");
   };
+
   const bannerText = document.querySelector(".banner-text");
   const updateBannerDisplay = (message) => {
     bannerText.style.animationName = "appear";
@@ -87,6 +99,7 @@ const renderer = (() => {
       bannerText.style.animationName = "none";
     }, "400");
   };
+
   let winningColor = "";
   const endGameAnimation = (name) => {
     switch (name) {
@@ -97,51 +110,58 @@ const renderer = (() => {
         winningColor = "#ff3e3e";
         break;
     };
-  if (gameBoard.winningXORow.length === 3) {
-    boardSquares[gameBoard.winningXORow[0]].style.color = winningColor;
-    boardSquares[gameBoard.winningXORow[1]].style.color = winningColor;
-    boardSquares[gameBoard.winningXORow[2]].style.color = winningColor;
-  }
+    if (gameBoard.winningXORow.length === 3) {
+      boardSquares[gameBoard.winningXORow[0]].style.color = winningColor;
+      boardSquares[gameBoard.winningXORow[1]].style.color = winningColor;
+      boardSquares[gameBoard.winningXORow[2]].style.color = winningColor;
+    };
   };
+
   const clearBoardAnimation = () => {
     for (let i = 0; i < 9; i++) {
       boardSquares[i].style.animationDuration = "2s"
       boardSquares[i].style.animationName = "shrink";
     };
-  if (gameBoard.winningXORow.length === 3) {
-    boardSquares[gameBoard.winningXORow[0]].style.animationName = "shrinkGrow";
-    boardSquares[gameBoard.winningXORow[1]].style.animationName = "shrinkGrow";
-    boardSquares[gameBoard.winningXORow[2]].style.animationName = "shrinkGrow";
-  } else if (gameBoard.winningXORow.length === 9) {
-    for (let i = 0; i < 9; i++) {
-      boardSquares[gameBoard.winningXORow[i]].style.animationName = "shrinkGrow";
-    }
-  }
+    if (gameBoard.winningXORow.length === 3) {
+      boardSquares[gameBoard.winningXORow[0]].style.animationName = "shrinkGrow";
+      boardSquares[gameBoard.winningXORow[1]].style.animationName = "shrinkGrow";
+      boardSquares[gameBoard.winningXORow[2]].style.animationName = "shrinkGrow";
+      } else if (gameBoard.winningXORow.length === 9) {
+        for (let i = 0; i < 9; i++) {
+          boardSquares[gameBoard.winningXORow[i]].style.animationName = "shrinkGrow";
+        };
+      };
     setTimeout(function () {
       for (let i = 0; i < 9; i++) {
         boardSquares[i].style.animationName = "none";
       };
     }, "2000");
   };
+
   return {boardSquares, updateBoard, difficultyButtonEvent, disableButtons,
           enableButtons, changeStatsColor, xoAnimation, updateBannerDisplay,
           endGameAnimation, clearBoardAnimation};
 })();
+
+//player object 
 
 const player = (() => {
   const name = "player";
   let score = 0;
   let symbol = "x";
   const color = "#5bafe6";
+
   return {name, symbol, color, score};
 })();
+
+//computer object, uses miniMax algorythm when difficulty set to unbeatable
 
 const computer = (() => {
   const name = "computer";
   let score = 0;
   let symbol = "o";
   const color = "#ff8383";
-  let difficulty = "easy";
+  let difficulty = "unbeatable";
 
   const easyMove = () => {
     let xoArrayCopy = copyXOarray();
@@ -150,6 +170,16 @@ const computer = (() => {
     gameBoard.xoArray[computerChoice] = computer.symbol;
     renderer.xoAnimation(renderer.boardSquares[computerChoice]);
   }
+
+  const normalMove = () => {
+    const randomNumber = Math.floor(Math.random() * (5 - 1) + 1);
+    if ((randomNumber === 1)) {
+      console.log("easy")
+      easyMove();
+    } else {
+      unbeatableMove();
+    };
+  };
 
   const copyXOarray = () => {
     let xoArrayCopy = [...gameBoard.xoArray];
@@ -160,7 +190,7 @@ const computer = (() => {
       };
     };
     return xoArrayCopy;
-  }
+  };
 
   const getAvailableSquares = (xoArrayCopy) => {
     return xoArrayCopy.filter(s => s != "o" && s != "x");
@@ -171,7 +201,7 @@ const computer = (() => {
     const computerChoice = miniMax(xoArrayCopy, computer.symbol);
     gameBoard.xoArray[computerChoice.index] = computer.symbol;
     renderer.xoAnimation(renderer.boardSquares[computerChoice.index]);
-  }
+  };
 
   const miniMax = (xoArrayCopy, currentPlayer) => {
     let availableSquares = getAvailableSquares(xoArrayCopy);
@@ -181,7 +211,7 @@ const computer = (() => {
       return {score: 10};
     } else if (availableSquares.length === 0) {
       return {score: 0};
-    }
+    };
     let moves = [];
     for (let i = 0; i < availableSquares.length; i++) {
       let move = {};
@@ -232,26 +262,30 @@ const computer = (() => {
       return false;
       };
     };
-  
+
   const computerMove = (difficulty) => {
     if (difficulty === "easy") {
       easyMove();
-    } else if (difficulty === "medium") {
+    } else if (difficulty === "normal") {
+      normalMove();
     } else if (difficulty === "unbeatable") {
       unbeatableMove();
     };
   };
+
   return {name, symbol, color, score, difficulty, computerMove};
 })();
 
+//game object, runs the game loop for each square and eveluates game outcome 
+
 const game = (() => {
   let isWinner = false;
-  let currentPlayer;
+
   const loop = () => {
+    renderer.difficultyButtonEvent();
     for (let i = 0; i < 9; i++) {
       renderer.boardSquares[i].addEventListener("click", () => {
         if (gameBoard.xoArray[i] === "") {
-          game.currentPlayer = player.symbol;
           renderer.changeStatsColor("player");
           gameBoard.xoArray[i] = player.symbol;
           renderer.disableButtons();
@@ -266,7 +300,6 @@ const game = (() => {
             }, "2000");
             return;
           };
-          game.currentPlayer = computer.symbol;
           renderer.changeStatsColor("computer");
           setTimeout(() => {
             computer.computerMove(computer.difficulty);
@@ -282,6 +315,7 @@ const game = (() => {
           return;
         };
     })}};
+
   const checkIfWinner = (xo, arr) => {
     if (arr[0] === xo && arr[1] === xo && arr[2] === xo) {
       gameBoard.pushToWinningArray(0, 1, 2);
@@ -314,22 +348,20 @@ const game = (() => {
       return false;
       };
     };
+
   const endGame = (isWinner, name) => {
     if (isWinner != false) {
       if (isWinner === true && name === "player") {
         player.score += 1;
         renderer.updateBannerDisplay(`${player.symbol.toUpperCase()} wins`);
         renderer.endGameAnimation("player");
-        console.log(name + " won");
       } else if (isWinner === true && name === "computer") {
         computer.score += 1
         renderer.updateBannerDisplay(`${computer.symbol.toUpperCase()} wins`);
         renderer.endGameAnimation("computer");
-        console.log(name + " won");
       } else if (isWinner === "tie") {
         renderer.updateBannerDisplay(`tie`);
-        console.log("no one won");
-      }
+      };
       renderer.clearBoardAnimation();
       setTimeout(() => {
         renderer.changeStatsColor("none");
@@ -347,6 +379,7 @@ const game = (() => {
       return;
     };
   };
+
   const changePlayerSymbol = (symbol) => {
     switch (symbol) {
       case "x":
@@ -359,10 +392,10 @@ const game = (() => {
         break;
     };
   };
-  return {loop, checkIfWinner, currentPlayer};
+
+  return {loop};
 })();
 
-renderer.difficultyButtonEvent();
-renderer.updateBoard();
+//run the game by calling the game loop method
+
 game.loop();
-renderer.changeStatsColor("player");
